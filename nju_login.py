@@ -8,6 +8,13 @@ import base64
 
 '''
 
+def do_captcha(img_data):
+        print("Loading ddddocr...",end='')
+        import ddddocr
+        print("\r"*18,end='')
+        ocr=ddddocr.DdddOcr()
+        return ocr.classification(img_data)
+
 def web_page(url,headers={}):
     response=requests.get(url,headers=headers)
     text=response.text
@@ -20,7 +27,7 @@ def encrypt(password,salt):
     encrypted_password=base64.b64encode(encrypted_password_bytes).decode('utf-8')
     return encrypted_password
 
-def login(username,password,captcha_callback):
+def login(username,password,captcha_callback=do_captcha):
     headers={
         'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6.1 Safari/605.1.15',
         'origin': 'https://authserver.nju.edu.cn',
@@ -64,12 +71,7 @@ def login(username,password,captcha_callback):
 
 
 if __name__=="__main__":
-    def do_captcha(img_data):
-        print("Loading ddddocr...",end='')
-        import ddddocr
-        print("\r"*18,end='')
-        ocr=ddddocr.DdddOcr()
-        return ocr.classification(img_data)
+
 
     x=login("221220099","eaqGU3xjZv4SWh",do_captcha)
     if x.status_code==302 or '无效' in x.text or '错误' in x.text:
