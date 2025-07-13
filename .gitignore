@@ -1,2 +1,4 @@
 __pycache__/
+nju_login.egg-info/
+dist/
 test.py
