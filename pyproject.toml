@@ -1,0 +1,12 @@
+[project]
+name = "nju-login"
+version = "0.1.0"
+description = "Login NJU authserver in python with ease. "
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ddddocr>=1.5.6",
+    "lxml>=6.0.0",
+    "pycryptodomex>=3.23.0",
+    "requests>=2.32.4",
+]

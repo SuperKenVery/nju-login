@@ -3,17 +3,18 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Util import Padding
 from lxml import etree
 import base64
+from typing import Callable
 '''
 向auth.nju.edu.cn发起post请求时，body中的dllt设为mobileLogin
 
 '''
 
-def do_captcha(img_data):
-        print("Loading ddddocr...",end='')
-        import ddddocr
-        print("\r"*18,end='')
-        ocr=ddddocr.DdddOcr()
-        return ocr.classification(img_data)
+def do_captcha(img_data: bytes) -> str:
+    print("Loading ddddocr...",end='')
+    import ddddocr
+    print("\r"*18,end='')
+    ocr=ddddocr.DdddOcr()
+    return ocr.classification(img_data)
 
 def web_page(url,headers={}):
     response=requests.get(url,headers=headers)
@@ -27,20 +28,22 @@ def encrypt(password,salt):
     encrypted_password=base64.b64encode(encrypted_password_bytes).decode('utf-8')
     return encrypted_password
 
-def login(username,password,captcha_callback=do_captcha):
-    headers={
+def login(
+    username: str,
+    password: str,
+    captcha_callback: Callable[[bytes], str] = do_captcha,
+) -> requests.Response:
+    session = requests.Session()
+    session.headers.update({
         'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6.1 Safari/605.1.15',
         'origin': 'https://authserver.nju.edu.cn',
         'referer': 'https://authserver.nju.edu.cn/authserver/login'
-    }
-    get_cookie_response=requests.get("https://authserver.nju.edu.cn/authserver/login",headers=headers)
-    cookies={
-        'route':get_cookie_response.cookies['route'],
-        'JSESSIONID':get_cookie_response.cookies['JSESSIONID'],
-        'org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE':'zh_CN'
-    }
+    })
 
-    login_page_response=requests.get("https://authserver.nju.edu.cn/authserver/login",headers=headers,cookies=cookies)
+    # Get some neccessary cookie
+    session.get("https://authserver.nju.edu.cn/authserver/login")
+
+    login_page_response=session.get("https://authserver.nju.edu.cn/authserver/login")
     login_page=etree.HTML(login_page_response.text)
     lt=str(login_page.xpath('//*[@id="casLoginForm"]/input[@name="lt"]//@value')[0])
     dllt="mobileLogin"
@@ -49,9 +52,9 @@ def login(username,password,captcha_callback=do_captcha):
     rmshown=str(login_page.xpath('//*[@id="casLoginForm"]/input[@name="rmShown"]//@value')[0])
     salt=str(login_page.xpath('//*[@id="pwdDefaultEncryptSalt"]//@value')[0])
 
-    need_captcha_response=requests.get(f"https://authserver.nju.edu.cn/authserver/needCaptcha.html?username={username}&pwdEncrypt2=pwdEncryptSalt",cookies=cookies,headers=headers)
+    need_captcha=session.get(f"https://authserver.nju.edu.cn/authserver/needCaptcha.html?username={username}&pwdEncrypt2=pwdEncryptSalt")
 
-    captcha_content=requests.get("https://authserver.nju.edu.cn/authserver/captcha.html",cookies=cookies,headers=headers).content
+    captcha_content=session.get("https://authserver.nju.edu.cn/authserver/captcha.html").content
     captcha_result=captcha_callback(captcha_content)
 
     encrypted_password=encrypt(password,salt)
@@ -66,7 +69,5 @@ def login(username,password,captcha_callback=do_captcha):
         "_eventId":eventid,
         "rmShown":rmshown
     }
-    login_response=requests.post("https://authserver.nju.edu.cn/authserver/login",cookies=cookies,data=data,allow_redirects=False,headers=headers)
+    login_response=session.post("https://authserver.nju.edu.cn/authserver/login",data=data,allow_redirects=False)
     return login_response
-
-
