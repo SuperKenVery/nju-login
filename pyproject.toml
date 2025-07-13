@@ -1,7 +1,7 @@
 [project]
-name = "nju-login"
-version = "0.1.0"
-description = "Login NJU authserver in python with ease. "
+name = "nju-login-simple"
+version = "1.1.1"
+description = "Login to authserver.nju.edu.cn, using python requests"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
