@@ -2,3 +2,4 @@ __pycache__/
 nju_login_simple.egg-info/
 dist/
 test.py
+.DS_Store

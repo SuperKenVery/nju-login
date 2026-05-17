@@ -3,7 +3,7 @@ name = "nju-login-simple"
 version = "1.1.4"
 description = "Login to authserver.nju.edu.cn, using python requests"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "ddddocr>=1.5.6",
     "lxml>=6.0.0",
