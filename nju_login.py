@@ -41,7 +41,19 @@ def login(
     username: str,
     password: str,
     captcha_callback: Callable[[bytes], str] = do_captcha,
-) -> requests.Response:
+    follow_redirect: bool = False,
+) -> requests.Response | requests.Session:
+    """Login to authserver.nju.edu.cn and return auth cookies.
+
+    Args:
+        username: Student ID
+        password: Unified authentication password
+        captcha_callback: CAPTCHA recognition callback, defaults to ddddocr
+        follow_redirect: Whether to follow the 302 redirect after login.
+            False (default): Return Response, cookies only contain CASTGC etc.
+            True: Return requests.Session, cookies contain route, JSESSIONID,
+                  CASTGC, MOD_AUTH_CAS etc. Ready for SSO services like epay.
+    """
     session = requests.Session()
     session.headers.update(
         {
@@ -91,6 +103,13 @@ def login(
     login_response = session.post(
         "https://authserver.nju.edu.cn/authserver/login",
         data=data,
-        allow_redirects=False,
+        allow_redirects=follow_redirect,
     )
+
+    if follow_redirect:
+        # Follow redirect and verify login success
+        if "personalInfo" in login_response.url or "accountsecurity" in login_response.url:
+            return session
+        raise ValueError("Login failed, check your username and password")
+
     return login_response

@@ -1,22 +1,38 @@
-# 南京大学统一认证登陆
+# NJU Login
 
-从账号密码拿到 `CASTGC` cookie
+Login to authserver.nju.edu.cn and get `CASTGC` cookie.
 
 ```python3
 import nju_login
-response = nju_login.login('学号', '统一认证密码')
+response = nju_login.login('student_id', 'password')
 ```
 
-## 高级用法
+## Advanced Usage
 
-```
+### Custom CAPTCHA callback
+
+```python
 response = nju_login.login(
-  '学号',
-  '统一认证密码',
-  # 验证码识别回调，不传则使用ddddocr识别
+  'student_id',
+  'password',
+  # Custom CAPTCHA recognition callback, defaults to ddddocr
   lambda x: "45cx"
 )
 
-# Now the cookies in response represent your login state.
+# The cookies in response represent your login state.
 # Specifically the CASTGC cookie.
+```
+
+### Get full session (for SSO services like epay)
+
+```python
+session = nju_login.login(
+  'student_id',
+  'password',
+  follow_redirect=True,
+)
+
+# Session contains route, JSESSIONID, CASTGC, MOD_AUTH_CAS etc.
+# Ready to use with SSO services like epay.
+cookies = session.cookies.get_dict()
 ```
