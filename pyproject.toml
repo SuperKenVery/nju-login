@@ -1,6 +1,6 @@
 [project]
 name = "nju-login-simple"
-version = "1.1.5"
+version = "1.2"
 description = "Login to authserver.nju.edu.cn, using python requests"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -10,4 +10,19 @@ dependencies = [
     "onnxruntime==1.19.2",
     "pycryptodomex>=3.23.0",
     "requests>=2.32.4",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.25,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "nju_login"
+module-root = "src"
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.10.9",
+    "numpy>=2.2.6",
+    "opencv-python>=5.0.0.93",
 ]
