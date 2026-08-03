@@ -20,6 +20,7 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; if pkgs.stdenv.isLinux then [
+            # matplotlib啥的，画图（显示验证码和识别结果）要用。仅开发阶段测试需要。
             libxcb
           ] else [];
 

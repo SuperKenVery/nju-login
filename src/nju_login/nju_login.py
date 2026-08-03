@@ -1,5 +1,5 @@
-from captcha import do_captcha
-from utils import extract_page_context, encrypt, getSafeSecure
+from .captcha import do_captcha
+from .utils import extract_page_context, encrypt, getSafeSecure
 import base64
 from typing import Callable
 
