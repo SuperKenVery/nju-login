@@ -1,6 +1,6 @@
 __pycache__/
 nju_login_simple.egg-info/
 dist/
-test.py
+/test.py
 .DS_Store
 .direnv
