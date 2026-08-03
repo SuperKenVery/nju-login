@@ -14,6 +14,11 @@ def extract_page_context(page_text: str) -> dict[str, str]:
 
     return ctx
 
+def extract_login_error(page_text: str) -> str:
+    page = etree.HTML(page_text)
+    error_msg = page.xpath('//div[@id="pwdLoginDiv"]//span[@id="showErrorTip"]//text()')[0]
+    return error_msg
+
 def encrypt(password, salt):
     cipher = AES.new(salt.encode("utf-8"), AES.MODE_CBC, iv=("a" * 16).encode("utf-8"))
     encrypted_password_bytes = cipher.encrypt(
