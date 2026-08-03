@@ -10,7 +10,7 @@ from lxml import etree
 import json
 
 
-class NJULoginError(BaseException):
+class NJULoginError(Exception):
     """登陆流程中的所有错误。错误基类，不直接抛出。"""
     pass
 

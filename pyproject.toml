@@ -7,10 +7,14 @@ requires-python = ">=3.10"
 dependencies = [
     "ddddocr>=1.5.6",
     "lxml>=6.0.0",
-    "matplotlib>=3.10.9",
-    "numpy>=2.2.6",
     "onnxruntime==1.19.2",
-    "opencv-python>=5.0.0.93",
     "pycryptodomex>=3.23.0",
     "requests>=2.32.4",
+]
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.10.9",
+    "numpy>=2.2.6",
+    "opencv-python>=5.0.0.93",
 ]

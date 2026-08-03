@@ -2,9 +2,6 @@ from functools import reduce
 import random
 
 import ddddocr
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
 from PIL import Image
 import io
 import time
