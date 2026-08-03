@@ -1,0 +1,13 @@
+include LICENSE
+include README.md
+include pyproject.toml
+recursive-include src/nju_login *.py
+
+prune .github
+exclude .envrc
+exclude .gitignore
+exclude .python-version
+exclude captcha_test.json
+exclude flake.lock
+exclude flake.nix
+exclude uv.lock

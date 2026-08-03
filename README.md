@@ -9,6 +9,11 @@ response = nju_login.login('学号', '统一认证密码')
 print(response.cookies["CASTGC"])
 ```
 
+## 安装
+
+```bash
+pip install nju-login-simple
+```
 
 # 登陆南大网站
 
